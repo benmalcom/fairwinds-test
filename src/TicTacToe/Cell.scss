@@ -1,0 +1,36 @@
+.cell{
+    width: 100px;
+    height: 100px;
+    font-size: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    border: 1px solid gray;
+    font-weight: 400;
+    border-bottom: none;
+
+    &:nth-child(3n + 1) {
+        border-left: none;
+    }
+    &:nth-child(3n + 3) {
+        border-right: none;
+        border-left: none;
+    }
+    &:nth-child(-n + 3) {
+        border-top: none;
+    }
+
+    &:empty{
+        cursor: pointer;
+    }
+
+    &.invalid{
+        cursor: not-allowed;
+    }
+
+    &.winner {
+        background-color: slateblue;
+        color: white;
+    }
+}
