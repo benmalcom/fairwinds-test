@@ -46,3 +46,76 @@ export const getWinnerFromBoardState = (cells, player) => {
   }
   return winner;
 };
+
+/**
+ * This function attempts to get the best index to choose based on the state of the board,
+ * it checks if the computer is about to win or if the human is about to win, then returns the completing index for the win,
+ * If this doesn't apply, then a random index is returned from available cells.
+ *
+ * @param {Array<String>} boardCells - current state of the cells
+ * @param {Object} players - current state of the cells
+ */
+export const getAICellIndex = (boardCells, players) => {
+  const { first: humanPlayerId, second: aiPlayerId } = players;
+  let index;
+  //1. BEST CHOICE: Check if the ai or human is about to win and return the completing index
+  for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
+    const combination = WINNING_COMBINATIONS[i];
+
+    if (hasVacantIndexes(boardCells, combination)) {
+      if (
+        getPlayerCellCounts(boardCells, combination, aiPlayerId) === 2 ||
+        getPlayerCellCounts(boardCells, combination, humanPlayerId) === 2
+      ) {
+        const indexes = getVacantIndexes(boardCells, combination);
+        index = indexes[0];
+        break;
+      }
+    }
+  }
+
+  //2. SECOND BEST CHOICE: Check if the ai is already in a winning combination and fill another cell
+
+  for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
+    const combination = WINNING_COMBINATIONS[i];
+    if (hasVacantIndexes(boardCells, combination)) {
+      if (getPlayerCellCounts(boardCells, combination, aiPlayerId) === 1) {
+        const indexes = getVacantIndexes(boardCells, combination);
+        if (indexes.length > 1) index = indexes[0];
+        break;
+      }
+    }
+  }
+
+  //3. SECOND BEST CHOICE: Get a random index if FIRST CHOICE and SECOND CHOICE fails
+
+  if (typeof index === 'undefined') {
+    const emptyCellsIndexes = getEmptyCellIndexes(boardCells);
+    const randomIndex = Math.floor(Math.random() * emptyCellsIndexes.length);
+    index = emptyCellsIndexes[randomIndex];
+  }
+
+  return index;
+};
+
+const getPlayerCellCounts = (boardCells, combination, playerId) => {
+  let count = 0;
+  combination.forEach(cellIndex => {
+    if (boardCells[cellIndex] === playerId) count++;
+  });
+  return count;
+};
+
+const getVacantIndexes = (boardCells, combination) =>
+  combination.filter(index => !boardCells[index]);
+
+const hasVacantIndexes = (boardCells, combination) =>
+  combination.some(index => !boardCells[index]);
+
+const getEmptyCellIndexes = boardCells => {
+  const emptyCellsIndexes = [];
+  boardCells.forEach((cell, index) => {
+    if (!cell) emptyCellsIndexes.push(index);
+  });
+  return emptyCellsIndexes;
+};

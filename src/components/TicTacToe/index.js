@@ -15,7 +15,7 @@ const INITIAL_BOARD_STATE = {
 const TicTacToe = () => {
   const {
     onCellClick,
-    selectPlayer,
+    setFirstPlayer,
     boardState,
     players,
     isWaitingForOpponent,
@@ -77,7 +77,7 @@ const TicTacToe = () => {
     return (
       <PlayerSelection
         matchSecondPlayer={matchSecondPlayer}
-        selectPlayer={selectPlayer}
+        selectPlayer={setFirstPlayer}
         players={players}
         isWaitingForOpponent={isWaitingForOpponent}
       />
