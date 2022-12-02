@@ -36,8 +36,16 @@ const getWinner = (cells, currentPlayer) => {
 
 const TicTacToe = () => {
   const [boardConfig, setBoardConfig] = useState(INITIAL_BOARD_CONFIG);
-  const { winCounts, isATie, onCellClick, selectPlayer, boardState } =
-    useGameState();
+  const {
+    winCounts,
+    isATie,
+    onCellClick,
+    selectPlayer,
+    boardState,
+    players,
+    isFirstPlayerSelected,
+    isOpponentSelected,
+  } = useGameState();
 
   const handleCellClick = cellIndex => {
     if (boardConfig.winner) return;
@@ -68,7 +76,8 @@ const TicTacToe = () => {
       <PlayerSelection
         onMatchPlayer={() => {}}
         selectPlayer={selectPlayer}
-        players={boardState.players}
+        players={players}
+        isFirstPlayerSelected={isFirstPlayerSelected}
       />
       {/*<Board
         cells={boardConfig.cells}

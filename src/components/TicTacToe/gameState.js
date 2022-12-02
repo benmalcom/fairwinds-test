@@ -27,10 +27,6 @@ const INITIAL_BOARD_STATE = {
   currentPlayer: null,
   winner: null,
   gameMode: gameModes.NOT_STARTED,
-  players: {
-    first: null,
-    second: null,
-  },
 };
 
 const getWinner = (cells, player) => {
@@ -48,16 +44,17 @@ const getWinner = (cells, player) => {
 export const useGameState = () => {
   const [boardState, setBoardState] = useState(INITIAL_BOARD_STATE);
   const [winCounts, setWinCounts] = useState({});
+  const [players, setPlayers] = useState({ first: null, second: null });
 
   const selectPlayer = playerId => {
-    setBoardState(state => {
-      const players = { ...state.players };
+    setPlayers(currentPlayers => {
+      const players = { ...currentPlayers };
       if (!players.first) {
         players.first = playerId;
       } else {
         players.second = playerId;
       }
-      return { ...state, players };
+      return players;
     });
   };
 
@@ -83,6 +80,24 @@ export const useGameState = () => {
     });
   };
 
+  const previousPlayers = usePrevious(players);
+
+  useEffect(() => {
+    if (!previousPlayers?.first && players.first) {
+      setTimeout(() => {
+        setPlayers(currentState => {
+          const second = Object.values(playerIds).filter(
+            id => id !== currentState.first
+          )[0];
+          return {
+            ...currentState,
+            second,
+          };
+        });
+      }, 300);
+    }
+  }, [players.first, previousPlayers?.first]);
+
   const previousGameMode = usePrevious(boardState.gameMode);
   useEffect(() => {
     if (
@@ -99,6 +114,17 @@ export const useGameState = () => {
 
   const isATie = !boardState.winner && boardState.cells.every(value => !!value);
   const isCellsEmpty = boardState.cells.every(value => !value);
+  const isFirstPlayerSelected = !!players.first && !players.second;
+  const isOpponentSelected = !!players.first && !!players.second;
 
-  return { onCellClick, isATie, winCounts, selectPlayer, boardState };
+  return {
+    onCellClick,
+    isATie,
+    winCounts,
+    selectPlayer,
+    boardState,
+    players,
+    isFirstPlayerSelected,
+    isOpponentSelected,
+  };
 };

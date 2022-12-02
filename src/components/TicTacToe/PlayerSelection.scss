@@ -7,6 +7,9 @@
   width: 100%;
   height: 100%;
   padding: 20px 10px;
+  &.waiting{
+    justify-content: space-around;
+  }
   .info-text{
     width: 210px;
     font-style: normal;
@@ -15,8 +18,14 @@
     line-height: 21px;
     color: #201238;
     text-transform: uppercase;
-    &:first-of-type{
-      font-weight: 400;
+    &.waiting{
+      text-transform: unset;
+      font-weight: 300;
+    }
+    &:not(.waiting) {
+      &:first-of-type {
+        font-weight: 400;
+      }
     }
   }
   .options{
