@@ -6,15 +6,8 @@ import {
   getWinnerFromBoardState,
 } from './util';
 
-const INITIAL_BOARD_STATE = {
-  cells: Array(9).fill(''),
-  currentPlayer: null,
-  winner: null,
-  gameMode: gameModes.NOT_STARTED,
-};
-
-export const useGameState = () => {
-  const [boardState, setBoardState] = useState(INITIAL_BOARD_STATE);
+export const useGameState = initialBoardState => {
+  const [boardState, setBoardState] = useState(initialBoardState);
   const [winnings, setWinnings] = useState({});
   const [players, setPlayers] = useState({ first: null, second: null });
   const [isWaitingForOpponent, setIsWaitingForOpponent] = useState(false);
@@ -69,7 +62,7 @@ export const useGameState = () => {
       setLastWinner(boardState.winner?.player);
     }
     setBoardState({
-      ...INITIAL_BOARD_STATE,
+      ...initialBoardState,
       gameMode: gameModes.IN_PROGRESS,
       currentPlayer: players.first,
     });

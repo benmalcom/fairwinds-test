@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './Board.scss';
+import { useEffect, useState } from 'react';
 import { Button } from 'components/ui/Button';
 import { InfoText } from 'components/ui/InfoText';
 
@@ -13,8 +14,21 @@ const Board = ({
   onSeeRecord,
   showActionButtons,
 }) => {
+  const [showBanner, setShowBanner] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setShowBanner(false), 2000);
+  }, []);
+
   return (
     <div className="Board">
+      <div
+        className={cx('banner', {
+          'slide-up': !showBanner,
+        })}
+      >
+        Now in game
+      </div>
       <InfoText className="player-status">{gameStatusText}</InfoText>
       <div className="board-inner">
         {cells.map((value, index) => (

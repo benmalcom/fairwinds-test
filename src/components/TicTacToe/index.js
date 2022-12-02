@@ -5,6 +5,13 @@ import { useGameState } from './gameState';
 import PlayerSelection from './PlayerSelection';
 import { gameModes } from './util';
 
+const INITIAL_BOARD_STATE = {
+  cells: Array(9).fill(''),
+  currentPlayer: null,
+  winner: null,
+  gameMode: gameModes.NOT_STARTED,
+};
+
 const TicTacToe = () => {
   const {
     onCellClick,
@@ -17,9 +24,7 @@ const TicTacToe = () => {
     winnings,
     lastWinner,
     seeRecord,
-  } = useGameState();
-
-  console.log('lastWinner ', lastWinner);
+  } = useGameState(INITIAL_BOARD_STATE);
 
   const getGamePlayStatusText = () => {
     const { currentPlayer, winner, gameMode } = boardState;

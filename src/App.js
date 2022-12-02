@@ -1,7 +1,4 @@
 import TicTacToe from './components/TicTacToe';
 
-function App() {
-  return <TicTacToe />;
-}
-
+const App = () => <TicTacToe />;
 export default App;
