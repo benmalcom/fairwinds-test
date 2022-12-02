@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePrevious } from './util';
 
 const WINNING_COMBINATIONS = [
@@ -7,6 +7,7 @@ const WINNING_COMBINATIONS = [
   [6, 7, 8],
   [0, 3, 6],
   [2, 5, 8],
+  [2, 4, 6],
   [1, 4, 7],
   [0, 4, 8],
 ];
@@ -43,8 +44,10 @@ const getWinner = (cells, player) => {
 
 export const useGameState = () => {
   const [boardState, setBoardState] = useState(INITIAL_BOARD_STATE);
-  const [winCounts, setWinCounts] = useState({});
+  const [winnings, setWinnings] = useState({});
   const [players, setPlayers] = useState({ first: null, second: null });
+  const [isWaitingForOpponent, setIsWaitingForOpponent] = useState(false);
+  const lastWinner = useRef();
 
   const selectPlayer = playerId => {
     setPlayers(currentPlayers => {
@@ -80,10 +83,33 @@ export const useGameState = () => {
     });
   };
 
-  const previousPlayers = usePrevious(players);
+  const matchSecondPlayer = () => {
+    if (!players.first) return;
+    setIsWaitingForOpponent(true);
+  };
 
+  const onPlayAgain = () => {
+    const isFirstWinner = Object.values(winnings).length === 1;
+    lastWinner.current = isFirstWinner ? null : boardState.winner?.player;
+    setBoardState({
+      ...INITIAL_BOARD_STATE,
+      gameMode: gameModes.IN_PROGRESS,
+      currentPlayer: players.first,
+    });
+  };
+
+  const previousPlayers = usePrevious(players);
   useEffect(() => {
     if (!previousPlayers?.first && players.first) {
+      setBoardState(state => ({ ...state, currentPlayer: players.first }));
+    } else if (!previousPlayers?.second && players.second) {
+      setBoardState(state => ({ ...state, gameMode: gameModes.IN_PROGRESS }));
+    }
+  }, [players, previousPlayers]);
+
+  const previousIsWaiting = usePrevious(isWaitingForOpponent);
+  useEffect(() => {
+    if (!previousIsWaiting && isWaitingForOpponent) {
       setTimeout(() => {
         setPlayers(currentState => {
           const second = Object.values(playerIds).filter(
@@ -94,9 +120,9 @@ export const useGameState = () => {
             second,
           };
         });
-      }, 300);
+      }, 500);
     }
-  }, [players.first, previousPlayers?.first]);
+  }, [isWaitingForOpponent, previousIsWaiting]);
 
   const previousGameMode = usePrevious(boardState.gameMode);
   useEffect(() => {
@@ -106,25 +132,24 @@ export const useGameState = () => {
     ) {
       // Game is finished, let's set winning counts
       const player = boardState.winner?.player;
-      setWinCounts(currentCounts => ({
-        [player]: currentCounts[player] ? currentCounts[player] + 1 : 1,
+      setWinnings(currentWinnings => ({
+        [player]: currentWinnings[player] ? currentWinnings[player] + 1 : 1,
       }));
     }
   }, [boardState.gameMode, boardState.winner, previousGameMode]);
 
   const isATie = !boardState.winner && boardState.cells.every(value => !!value);
-  const isCellsEmpty = boardState.cells.every(value => !value);
-  const isFirstPlayerSelected = !!players.first && !players.second;
-  const isOpponentSelected = !!players.first && !!players.second;
 
   return {
     onCellClick,
     isATie,
-    winCounts,
+    winnings,
     selectPlayer,
     boardState,
     players,
-    isFirstPlayerSelected,
-    isOpponentSelected,
+    matchSecondPlayer,
+    isWaitingForOpponent,
+    onPlayAgain,
+    lastWinner: lastWinner.current,
   };
 };

@@ -10,23 +10,15 @@
   &.waiting{
     justify-content: space-around;
   }
-  .info-text{
-    width: 210px;
-    font-style: normal;
-    font-weight: 300;
-    font-size: 18px;
-    line-height: 21px;
-    color: #201238;
-    text-transform: uppercase;
-    &.waiting{
+    .waiting-text{
       text-transform: unset;
       font-weight: 300;
+      width: 210px;
     }
-    &:not(.waiting) {
+    :not(.waiting-text) {
       &:first-of-type {
         font-weight: 400;
       }
-    }
   }
   .options{
     width: 210px;

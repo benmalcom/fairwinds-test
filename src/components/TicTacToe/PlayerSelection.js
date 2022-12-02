@@ -3,21 +3,24 @@ import PropTypes from 'prop-types';
 import './PlayerSelection.scss';
 import { playerIds } from 'components/TicTacToe/gameState';
 import { Button } from 'components/ui/Button';
+import { InfoText } from 'components/ui/InfoText';
 
 const PlayerSelection = ({
   selectPlayer,
   players,
-  onMatchPlayer,
-  isFirstPlayerSelected,
+  matchSecondPlayer,
+  isWaitingForOpponent,
 }) => {
   return (
-    <div className={cx('PlayerSelection', { waiting: isFirstPlayerSelected })}>
-      {isFirstPlayerSelected ? (
-        <p className="info-text waiting">Waiting to find your opponent…</p>
+    <div className={cx('PlayerSelection', { waiting: isWaitingForOpponent })}>
+      {isWaitingForOpponent ? (
+        <InfoText className="waiting-text">
+          Waiting to find your opponent…
+        </InfoText>
       ) : (
         <>
-          <p className="info-text">Welcome</p>
-          <p className="info-text">Pick your player</p>
+          <InfoText>Welcome</InfoText>
+          <InfoText>Pick your player</InfoText>
         </>
       )}
       <div className="options">
@@ -31,17 +34,19 @@ const PlayerSelection = ({
           </div>
         ))}
       </div>
-      {!isFirstPlayerSelected && (
-        <Button onClick={onMatchPlayer}>Match me with my opponent</Button>
+      {!isWaitingForOpponent && (
+        <Button onClick={matchSecondPlayer} disabled={!players.first}>
+          Match me with my opponent
+        </Button>
       )}
     </div>
   );
 };
 
 PlayerSelection.propTypes = {
-  onMatchPlayer: PropTypes.func.isRequired,
+  matchSecondPlayer: PropTypes.func.isRequired,
   selectPlayer: PropTypes.func.isRequired,
-  isFirstPlayerSelected: PropTypes.bool,
+  isWaitingForOpponent: PropTypes.bool,
   players: PropTypes.shape({
     first: PropTypes.string,
     second: PropTypes.string,

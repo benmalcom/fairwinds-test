@@ -15,7 +15,7 @@
   cursor: pointer;
   outline: none;
   border: none;
-  &:hover{
+  &:hover, &:disabled{
     background: rgba(40, 45, 79, 0.66);
   }
 }
