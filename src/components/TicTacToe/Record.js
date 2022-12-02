@@ -4,10 +4,10 @@ import { Button } from 'components/ui/Button';
 import { InfoText } from 'components/ui/InfoText';
 
 const Record = ({ onPlayAgain, winnings, gameStatusText, players }) => {
-  const totalGames = Object.values(winnings).reduce(
-    (acc, current) => acc + current,
-    0
-  );
+  const totalWinsAndLosses = Object.entries(winnings)
+    .filter(([key]) => key !== 'tie')
+    .reduce((acc, [, value]) => acc + value, 0);
+
   const playerWinCount = winnings[players.first] || 0;
 
   return (
@@ -15,7 +15,7 @@ const Record = ({ onPlayAgain, winnings, gameStatusText, players }) => {
       <InfoText className="player-status">{gameStatusText}</InfoText>
       <InfoText className="player-statistics">
         You have won {playerWinCount} times and lost{' '}
-        {totalGames - playerWinCount} times
+        {totalWinsAndLosses - playerWinCount} times
       </InfoText>
       <div className="actions">
         <Button onClick={onPlayAgain}>Play Again</Button>

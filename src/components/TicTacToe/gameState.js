@@ -36,14 +36,13 @@ export const useGameState = initialBoardState => {
         configUpdate.winner = winner;
         configUpdate.gameMode = gameModes.FINISHED;
       } else {
-        configUpdate.currentPlayer =
-          state.currentPlayer === playerIds.O ? playerIds.X : playerIds.O;
+        if (cells.every(value => !!value)) {
+          configUpdate.gameMode = gameModes.FINISHED;
+        } else {
+          configUpdate.currentPlayer =
+            state.currentPlayer === playerIds.O ? playerIds.X : playerIds.O;
+        }
       }
-      if (
-        cells.every(value => !!value) &&
-        configUpdate.gameMode !== gameModes.FINISHED
-      )
-        configUpdate.gameMode = gameModes.FINISHED;
 
       return {
         ...state,
@@ -105,9 +104,20 @@ export const useGameState = initialBoardState => {
     ) {
       // Game is finished, let's set winning counts
       const player = boardState.winner?.player;
-      setWinnings(currentWinnings => ({
-        [player]: currentWinnings[player] ? currentWinnings[player] + 1 : 1,
-      }));
+
+      setWinnings(currentWinnings => {
+        const winningsUpdate = {};
+        if (player) {
+          winningsUpdate[player] = currentWinnings[player]
+            ? currentWinnings[player] + 1
+            : 1;
+        } else {
+          winningsUpdate.tie = currentWinnings.tie
+            ? currentWinnings.tie + 1
+            : 1;
+        }
+        return { ...currentWinnings, ...winningsUpdate };
+      });
     }
   }, [boardState.gameMode, boardState.winner, previousGameMode]);
 

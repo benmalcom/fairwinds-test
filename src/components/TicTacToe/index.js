@@ -84,7 +84,7 @@ const TicTacToe = () => {
     );
   };
 
-  return <div className="wrapper">{getCurrentScreen()}</div>;
+  return <div className="TicTacToeWrapper">{getCurrentScreen()}</div>;
 };
 
 export default TicTacToe;
