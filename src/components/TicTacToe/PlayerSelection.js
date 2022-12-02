@@ -1,7 +1,7 @@
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './PlayerSelection.scss';
-import { playerIds } from 'components/TicTacToe/gameState';
+import { playerIds } from 'components/TicTacToe/util';
 import { Button } from 'components/ui/Button';
 import { InfoText } from 'components/ui/InfoText';
 

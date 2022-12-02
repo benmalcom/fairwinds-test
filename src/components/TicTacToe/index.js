@@ -1,8 +1,9 @@
 import './index.scss';
 import Record from 'components/TicTacToe/Record';
 import Board from './Board';
-import { gameModes, useGameState } from './gameState';
+import { useGameState } from './gameState';
 import PlayerSelection from './PlayerSelection';
+import { gameModes } from './util';
 
 const TicTacToe = () => {
   const {
@@ -15,9 +16,27 @@ const TicTacToe = () => {
     onPlayAgain,
     winnings,
     lastWinner,
-    gameStatusText,
     seeRecord,
   } = useGameState();
+
+  console.log('lastWinner ', lastWinner);
+
+  const getGamePlayStatusText = () => {
+    const { currentPlayer, winner, gameMode } = boardState;
+    let status = `${currentPlayer}'s turn!`;
+
+    if (gameMode === gameModes.FINISHED || gameMode === gameModes.RECORD_VIEW) {
+      if (winner) {
+        status =
+          lastWinner && lastWinner === winner.player
+            ? `${winner.player} wins again!`
+            : `${winner.player} wins!`;
+      } else {
+        status = `It's a tie!`;
+      }
+    }
+    return status;
+  };
 
   const getCurrentScreen = () => {
     if (
@@ -27,7 +46,7 @@ const TicTacToe = () => {
       return (
         <Board
           onSeeRecord={seeRecord}
-          gameStatusText={gameStatusText}
+          gameStatusText={getGamePlayStatusText()}
           winnings={winnings}
           currentPlayer={boardState.currentPlayer}
           cells={boardState.cells}
@@ -35,6 +54,7 @@ const TicTacToe = () => {
           winner={boardState.winner}
           onPlayAgain={onPlayAgain}
           lastWinner={lastWinner}
+          showActionButtons={boardState.gameMode === gameModes.FINISHED}
         />
       );
     }
@@ -42,7 +62,7 @@ const TicTacToe = () => {
     if (boardState.gameMode === gameModes.RECORD_VIEW) {
       return (
         <Record
-          gameStatusText={gameStatusText}
+          gameStatusText={getGamePlayStatusText()}
           winnings={winnings}
           players={players}
           onPlayAgain={onPlayAgain}

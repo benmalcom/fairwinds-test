@@ -11,6 +11,7 @@ const Board = ({
   onPlayAgain,
   gameStatusText,
   onSeeRecord,
+  showActionButtons,
 }) => {
   return (
     <div className="Board">
@@ -27,8 +28,12 @@ const Board = ({
         ))}
       </div>
       <div className="actions">
-        <Button onClick={onPlayAgain}>Play Again</Button>
-        <Button onClick={onSeeRecord}>See Record</Button>
+        {showActionButtons && (
+          <>
+            <Button onClick={onPlayAgain}>Play Again</Button>
+            <Button onClick={onSeeRecord}>See Record</Button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -46,6 +51,7 @@ Board.propTypes = {
   onCellClick: PropTypes.func.isRequired,
   onPlayAgain: PropTypes.func.isRequired,
   onSeeRecord: PropTypes.func.isRequired,
+  showActionButtons: PropTypes.bool,
 };
 
 export default Board;
