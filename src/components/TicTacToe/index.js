@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import './Board.scss';
-import Cell from './Cell';
+import './index.scss';
+import Board from './Board';
+import { useGameState } from './gameState';
+import PlayerSelection from './PlayerSelection';
 
 const PLAYER_O = 'o';
 const PLAYER_X = 'x';
@@ -32,8 +34,10 @@ const getWinner = (cells, currentPlayer) => {
   return winner;
 };
 
-const Board = () => {
+const TicTacToe = () => {
   const [boardConfig, setBoardConfig] = useState(INITIAL_BOARD_CONFIG);
+  const { winCounts, isATie, onCellClick, selectPlayer, boardState } =
+    useGameState();
 
   const handleCellClick = cellIndex => {
     if (boardConfig.winner) return;
@@ -61,31 +65,18 @@ const Board = () => {
 
   return (
     <div id="wrapper">
-      {itsATie && <div className="info">It's a tie</div>}
-      {boardConfig.winner && (
-        <div className="info">
-          {boardConfig.winner.player === PLAYER_O ? 'Player O' : 'Player X'}{' '}
-          wins
-        </div>
-      )}
-      {!isCellsEmpty && (
-        <button id="reset" onClick={() => setBoardConfig(INITIAL_BOARD_CONFIG)}>
-          Reset game
-        </button>
-      )}
-      <div id="board">
-        {boardConfig.cells.map((value, index) => (
-          <Cell
-            key={index}
-            value={value}
-            cellIndex={index}
-            onClick={handleCellClick}
-            winner={boardConfig.winner}
-          />
-        ))}
-      </div>
+      <PlayerSelection
+        onMatchPlayer={() => {}}
+        selectPlayer={selectPlayer}
+        players={boardState.players}
+      />
+      {/*<Board
+        cells={boardConfig.cells}
+        onCellClick={handleCellClick}
+        winner={boardConfig.winner}
+      />*/}
     </div>
   );
 };
 
-export default Board;
+export default TicTacToe;

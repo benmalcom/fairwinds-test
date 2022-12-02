@@ -1,0 +1,54 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "extends": "react-app",
+  "overrides": [
+    {
+      "files": ["*.stories.js", "*.test.js"],
+      "rules": {
+        "react/jsx-props-no-spreading": "off",
+        "react/prop-types": "off"
+      }
+    }
+  ],
+  "rules": {
+    "import/order": [
+      1,
+      {
+        "groups": [
+          "external",
+          "builtin",
+          "internal",
+          "sibling",
+          "parent",
+          "index"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "components",
+            "group": "internal"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["internal"],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "import/no-unresolved": ["error", { "caseSensitive": true }],
+    "max-len": ["off", { "code": 120 }],
+    "import/no-anonymous-default-export": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src/", "jest/"]
+      }
+    }
+  }
+}

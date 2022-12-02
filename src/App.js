@@ -1,7 +1,7 @@
-import Board from './TicTacToe/Board';
+import TicTacToe from './components/TicTacToe';
 
 function App() {
-  return <Board />;
+  return <TicTacToe />;
 }
 
 export default App;

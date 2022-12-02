@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "jest/*": ["jest/*"],
+      "components/*": ["components/*"]
+    },
+    "allowSyntheticDefaultImports": true
+
+  },
+
+  "exclude": ["node_modules"]
+}
