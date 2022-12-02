@@ -8,26 +8,13 @@ const Board = ({
   cells,
   onCellClick,
   winner,
-  currentPlayer,
   onPlayAgain,
-  lastWinner,
-  winnings,
+  gameStatusText,
+  onSeeRecord,
 }) => {
-  console.log('lastWinner ', lastWinner);
-  const getPlayStatus = () => {
-    let status = `${currentPlayer}'s turn!`;
-    if (winner) {
-      status =
-        lastWinner && lastWinner === winner.player
-          ? `${winner.player} wins again!`
-          : `${winner.player} wins!`;
-    }
-
-    return status;
-  };
   return (
     <div className="Board">
-      <InfoText className="player-status">{getPlayStatus()}</InfoText>
+      <InfoText className="player-status">{gameStatusText}</InfoText>
       <div className="board-inner">
         {cells.map((value, index) => (
           <Cell
@@ -41,7 +28,7 @@ const Board = ({
       </div>
       <div className="actions">
         <Button onClick={onPlayAgain}>Play Again</Button>
-        <Button>See Record</Button>
+        <Button onClick={onSeeRecord}>See Record</Button>
       </div>
     </div>
   );
@@ -49,6 +36,7 @@ const Board = ({
 
 Board.propTypes = {
   winnings: PropTypes.objectOf(PropTypes.number),
+  gameStatusText: PropTypes.string.isRequired,
   currentPlayer: PropTypes.string.isRequired,
   cells: PropTypes.arrayOf(PropTypes.string).isRequired,
   winner: PropTypes.shape({
@@ -57,6 +45,7 @@ Board.propTypes = {
   }),
   onCellClick: PropTypes.func.isRequired,
   onPlayAgain: PropTypes.func.isRequired,
+  onSeeRecord: PropTypes.func.isRequired,
 };
 
 export default Board;

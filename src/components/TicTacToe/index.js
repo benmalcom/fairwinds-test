@@ -1,11 +1,11 @@
 import './index.scss';
+import Record from 'components/TicTacToe/Record';
 import Board from './Board';
 import { gameModes, useGameState } from './gameState';
 import PlayerSelection from './PlayerSelection';
 
 const TicTacToe = () => {
   const {
-    isATie,
     onCellClick,
     selectPlayer,
     boardState,
@@ -15,6 +15,8 @@ const TicTacToe = () => {
     onPlayAgain,
     winnings,
     lastWinner,
+    gameStatusText,
+    seeRecord,
   } = useGameState();
 
   const getCurrentScreen = () => {
@@ -24,6 +26,8 @@ const TicTacToe = () => {
     ) {
       return (
         <Board
+          onSeeRecord={seeRecord}
+          gameStatusText={gameStatusText}
           winnings={winnings}
           currentPlayer={boardState.currentPlayer}
           cells={boardState.cells}
@@ -31,6 +35,17 @@ const TicTacToe = () => {
           winner={boardState.winner}
           onPlayAgain={onPlayAgain}
           lastWinner={lastWinner}
+        />
+      );
+    }
+
+    if (boardState.gameMode === gameModes.RECORD_VIEW) {
+      return (
+        <Record
+          gameStatusText={gameStatusText}
+          winnings={winnings}
+          players={players}
+          onPlayAgain={onPlayAgain}
         />
       );
     }

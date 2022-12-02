@@ -1,0 +1,25 @@
+.Record{
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 20px 10px;
+  .player-status{
+    margin-top: 30px;
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+  .player-statistics{
+    width: 209px;
+    font-weight: 300;
+  }
+  .actions{
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+  }
+}
+

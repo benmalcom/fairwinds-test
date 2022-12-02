@@ -16,6 +16,7 @@ export const gameModes = {
   NOT_STARTED: 'not_started',
   IN_PROGRESS: 'in_progress',
   FINISHED: 'finished',
+  RECORD_VIEW: 'record_view',
 };
 
 export const playerIds = {
@@ -75,6 +76,11 @@ export const useGameState = () => {
         configUpdate.currentPlayer =
           state.currentPlayer === playerIds.O ? playerIds.X : playerIds.O;
       }
+      if (
+        cells.every(value => !!value) &&
+        configUpdate.gameMode !== gameModes.FINISHED
+      )
+        configUpdate.gameMode = gameModes.FINISHED;
 
       return {
         ...state,
@@ -97,6 +103,9 @@ export const useGameState = () => {
       currentPlayer: players.first,
     });
   };
+
+  const seeRecord = () =>
+    setBoardState(state => ({ ...state, gameMode: gameModes.RECORD_VIEW }));
 
   const previousPlayers = usePrevious(players);
   useEffect(() => {
@@ -138,11 +147,25 @@ export const useGameState = () => {
     }
   }, [boardState.gameMode, boardState.winner, previousGameMode]);
 
-  const isATie = !boardState.winner && boardState.cells.every(value => !!value);
+  const getGamePlayStatusText = () => {
+    const { currentPlayer, winner, gameMode } = boardState;
+    let status = `${currentPlayer}'s turn!`;
+
+    if (gameMode === gameModes.FINISHED) {
+      if (winner) {
+        status =
+          lastWinner && lastWinner === winner.player
+            ? `${winner.player} wins again!`
+            : `${winner.player} wins!`;
+      } else {
+        status = `It's a tie!`;
+      }
+    }
+    return status;
+  };
 
   return {
     onCellClick,
-    isATie,
     winnings,
     selectPlayer,
     boardState,
@@ -151,5 +174,7 @@ export const useGameState = () => {
     isWaitingForOpponent,
     onPlayAgain,
     lastWinner: lastWinner.current,
+    gameStatusText: getGamePlayStatusText(),
+    seeRecord,
   };
 };
