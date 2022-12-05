@@ -58,7 +58,8 @@ export const getWinnerFromBoardState = (cells, player) => {
 export const getAICellIndex = (boardCells, players) => {
   const { first: humanPlayerId, second: aiPlayerId } = players;
   let index;
-  //1. BEST CHOICE: Check if the ai or human is about to win and return the completing index
+
+  //1. BEST CHOICE: Check if the ai or human is about to win and return the last empty index in the combination
   for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
     const combination = WINNING_COMBINATIONS[i];
 
@@ -75,7 +76,6 @@ export const getAICellIndex = (boardCells, players) => {
   }
 
   //2. SECOND BEST CHOICE: Check if the ai is already in a winning combination and fill another cell
-
   for (let i = 0; i < WINNING_COMBINATIONS.length; i++) {
     const combination = WINNING_COMBINATIONS[i];
     if (hasVacantIndexes(boardCells, combination)) {
@@ -88,7 +88,6 @@ export const getAICellIndex = (boardCells, players) => {
   }
 
   //3. SECOND BEST CHOICE: Get a random index if FIRST CHOICE and SECOND CHOICE fails
-
   if (typeof index === 'undefined') {
     const emptyCellsIndexes = getEmptyCellIndexes(boardCells);
     const randomIndex = Math.floor(Math.random() * emptyCellsIndexes.length);
@@ -98,6 +97,7 @@ export const getAICellIndex = (boardCells, players) => {
   return index;
 };
 
+// Get the number of cells already occupied by this player in this combination
 const getPlayerCellCounts = (boardCells, combination, playerId) => {
   let count = 0;
   combination.forEach(cellIndex => {
@@ -106,12 +106,15 @@ const getPlayerCellCounts = (boardCells, combination, playerId) => {
   return count;
 };
 
+// Get indexes in combination array that has not been filled in board cells
 const getVacantIndexes = (boardCells, combination) =>
   combination.filter(index => !boardCells[index]);
 
+// Check if any of the indexes in combination array are empty in the board cells
 const hasVacantIndexes = (boardCells, combination) =>
   combination.some(index => !boardCells[index]);
 
+// Get the indexes of empty cells in the board cells array
 const getEmptyCellIndexes = boardCells => {
   const emptyCellsIndexes = [];
   boardCells.forEach((cell, index) => {
